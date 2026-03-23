@@ -9,43 +9,24 @@ on:
       - main
 
 jobs:
-  tests:
-    name: Tests Python
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Récupérer le code
-        uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Installer Python
-        uses: actions/setup-python@v6
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.14'
           cache: 'pip'
 
-      - name: Installer les dépendances
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Lancer les tests
+      - name: Run tests
         run: |
           pytest
-
-  docker_build:
-    name: Build Docker
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Récupérer le code
-        uses: actions/checkout@v6
-
-      - name: Préparer Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Construire l'image Docker
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          push: false
